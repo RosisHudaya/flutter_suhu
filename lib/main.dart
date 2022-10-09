@@ -40,9 +40,28 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Variabel berubah
-  double _kelvin = 0;
-  double _reamor = 0;
-  double _fahrenheit = 0;
+  double _result = 0;
+  var listSuhu = ["Kelvin", "Reamor", "Fahrenheit"];
+  var selectedSuhu = "Kelvin";
+  String? selectedValue;
+
+  konverterSuhu() {
+    setState(() {
+      if (etInputUser.text.isNotEmpty) {
+        if (selectedSuhu == "Kelvin") {
+          _result = printKelvin(double.parse(etInputUser.text));
+        }
+
+        if (selectedSuhu == "Reamor") {
+          _result = printReamor(double.parse(etInputUser.text));
+        }
+
+        if (selectedSuhu == "Fahrenheit") {
+          _result = printFahrenheit(double.parse(etInputUser.text));
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,56 +90,29 @@ class _MyAppState extends State<MyApp> {
                   hintText: 'Masukkan Suhu Dalam Celcius',
                 ),
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Suhu dalam Kelvin'),
-                          Text(
-                            '$_kelvin',
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Suhu dalam Reamor'),
-                          Text(
-                            '$_reamor',
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+              DropdownButton(
+                  value: selectedSuhu,
+                  items: listSuhu.map((String listSuhu) {
+                    return DropdownMenuItem(
+                      value: listSuhu,
+                      child: Text(listSuhu),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedSuhu = newValue!;
+                    });
+                  }),
+              const Text(
+                'Hasil',
+                style: TextStyle(
+                  fontSize: 20,
                 ),
               ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text('Suhu dalam Fahrenheit'),
-                    Text(
-                      '$_fahrenheit',
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ],
+              Text(
+                '$_result',
+                style: const TextStyle(
+                  fontSize: 30,
                 ),
               ),
               Column(
@@ -129,16 +121,7 @@ class _MyAppState extends State<MyApp> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          if (etInputUser.text.isNotEmpty) {
-                            _kelvin =
-                                printKelvin(double.parse(etInputUser.text));
-                            _reamor =
-                                printReamor(double.parse(etInputUser.text));
-                            _fahrenheit =
-                                printFahrenheit(double.parse(etInputUser.text));
-                          }
-                        });
+                        konverterSuhu();
                       },
                       child: const Text('Konversi Suhu'),
                     ),
