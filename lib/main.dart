@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
   var listSuhu = ["Kelvin", "Reamor", "Fahrenheit"];
   var selectedSuhu = "Kelvin";
   String? selectedValue;
+  List<String> history = <String>[];
 
   konverterSuhu() {
     setState(() {
@@ -59,6 +60,8 @@ class _MyAppState extends State<MyApp> {
         if (selectedSuhu == "Fahrenheit") {
           _result = printFahrenheit(double.parse(etInputUser.text));
         }
+
+        history.add("$selectedSuhu : $_result");
       }
     });
   }
@@ -115,19 +118,32 @@ class _MyAppState extends State<MyApp> {
                   fontSize: 30,
                 ),
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        konverterSuhu();
-                      },
-                      child: const Text('Konversi Suhu'),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    konverterSuhu();
+                  },
+                  child: const Text('Konversi Suhu'),
+                ),
               ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Riwayat Konversi',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: history.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(history[index]),
+                    );
+                  },
+                ),
+              )
             ],
           ),
         ),
